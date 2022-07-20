@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'fecha_nacimiento'
     ];
 
     /**
@@ -41,4 +42,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function domicilio()
+    {
+        return $this->hasOne(Domicilio::class);
+    }
+
+    public function toArray()
+    {
+        $atrr = parent::toArray();
+        $age = date_diff(date_create($atrr['fecha_nacimiento']), date_create(date('Y-m-d')));
+        return array_merge($atrr, [
+            'edad' => $age->format('%y')
+        ]);
+    }
 }
